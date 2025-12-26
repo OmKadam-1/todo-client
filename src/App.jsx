@@ -17,18 +17,18 @@ function App() {
 
     const todo = async () => {
         console.log("Loading");
-        const response = await axios.get("http://localhost:8030/todos");
+        const response = await axios.get("https://todoserver-pojm.onrender.com/");
 
 
         setTodos(response.data.data);
     };
     const add = async () => {
-        const response = await axios.post("http://localhost:8030/todos", { todoitem: newtodo },);
+        const response = await axios.post("https://todoserver-pojm.onrender.com/", { todoitem: newtodo },);
         setnewtodo("");
         todo();
     }
     const edit = async() =>{
-        const response = await axios.put("http://localhost:8030/todos",{
+        const response = await axios.put("https://todoserver-pojm.onrender.com/",{
             "oldtodoitem":oldtodo,
             "newtodoitem":newtodo,
         });
@@ -38,7 +38,7 @@ function App() {
         setoldtodo("");
     }
     const undo = async (todoitem) => {
-        const response = await axios.delete("http://localhost:8030/todos", { data: { todoitem: todoitem } },);
+        const response = await axios.delete("https://todoserver-pojm.onrender.com/", { data: { todoitem: todoitem } },);
         todo();
     }
 
