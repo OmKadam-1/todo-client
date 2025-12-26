@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import axios, { Axios } from "axios";
-import imgdelete from "./assets/delete.png";
-import editimg from "./assets/edit.png";
+import deleteicon from "./assets/delete.png";
+import editicon from "./assets/edit.png";
 
 
 
@@ -56,10 +56,10 @@ function App() {
                 return (
                     <div key={index} className="todo-container">
                         <h2>{todo}</h2>
-                        <img src={editimg} className="edit-img" onClick={() => {
+                        <img src={editicon} className="edit-img" onClick={() => {
                             seteditmode(true); setoldtodo(todo); setnewtodo(todo);
                         }}></img>
-                        <img src={imgdelete} className="delete-icon" onClick={() => {
+                        <img src={deleteicon} className="delete-icon" onClick={() => {
                             undo(todo);
                         }}></img>
                     </div>
