@@ -1,0 +1,156 @@
+/* App.css */
+
+/* Global reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body styling */
+body {
+  background: linear-gradient(to right, #f8f9fa, #e9ecef);
+  display: flex;
+  justify-content: center;
+  padding: 50px 20px;
+  min-height: 100vh;
+}
+
+/* App title */
+.title {
+  text-align: center;
+  font-size: 3rem;
+  color: #343a40;
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 2px #adb5bd;
+}
+
+/* Todo container */
+.todo-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.todo-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Todo text */
+.todo-container h2 {
+  font-size: 1.2rem;
+  color: #495057;
+  word-break: break-word;
+  flex: 1;
+  margin-right: 15px;
+}
+
+/* Edit and delete icons */
+.delete-icon, .edit-img {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.delete-icon:hover {
+  transform: scale(1.2);
+  opacity: 0.7;
+}
+
+.edit-img:hover {
+  transform: scale(1.2);
+  opacity: 0.7;
+}
+
+/* Container for input + button */
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Input task */
+.input-task {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  width: 250px;
+  font-size: 1rem;
+  transition: border 0.2s ease;
+}
+
+.input-task:focus {
+  border-color: #495057;
+  outline: none;
+  box-shadow: 0 0 5px rgba(73, 80, 87, 0.3);
+}
+
+/* Add button */
+.btn-add {
+  padding: 12px 20px;
+  background: #495057;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-add:hover {
+  background: #343a40;
+  transform: scale(1.05);
+}
+
+/* Input for editing todo */
+.todo-container input[type="text"] {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+}
+
+.todo-container button {
+  margin-left: 10px;
+  padding: 6px 12px;
+  background: #20c997;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.todo-container button:hover {
+  background: #12b886;
+  transform: scale(1.05);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .input-task {
+    width: 100%;
+  }
+  
+  .todo-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .delete-icon, .edit-img, .todo-container button {
+    margin-top: 10px;
+  }
+}
