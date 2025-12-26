@@ -14,24 +14,23 @@ function App() {
     const [editmode, seteditmode] = useState("false");
     const [newtodo, setnewtodo] = useState("");
 
-    const BASE_URL= import.meta.env.VITE_BASE_URL;
-
+    
 
 
     const todo = async () => {
         console.log("Loading");
-        const response = await axios.get(`${BASE_URL}`);
+        const response = await axios.get("https://todoserver-pojm.onrender.com");
 
 
         setTodos(response.data.data);
     };
     const add = async () => {
-        const response = await axios.post(`${BASE_URL}, { todoitem: newtodo },`);
+        const response = await axios.post("https://todoserver-pojm.onrender.com, { todoitem: newtodo },");
         setnewtodo("");
         todo();
     }
     const edit = async() =>{
-        const response = await axios.put(`${BASE_URL},{
+        const response = await axios.put(`https://todoserver-pojm.onrender.com,{
             "oldtodoitem":oldtodo,
             "newtodoitem":newtodo,
         }`);
@@ -41,7 +40,7 @@ function App() {
         setoldtodo("");
     }
     const undo = async (todoitem) => {
-        const response = await axios.delete(`${BASE_URL}, { data: { todoitem: todoitem } },`);
+        const response = await axios.delete("https://todoserver-pojm.onrender.com, { data: { todoitem: todoitem } },");
         todo();
     }
 
