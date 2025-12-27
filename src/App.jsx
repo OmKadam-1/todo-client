@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// Import icons from assets
+
 import editIcon from "./assets/edit.png";
 import deleteIcon from "./assets/delete.png";
 
-// API URL (live Render backend)
+
 const API = process.env.REACT_APP_API || "https://todoserver-pojm.onrender.com";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
   const [editTodo, setEditTodo] = useState(null);
   const [editValue, setEditValue] = useState("");
 
-  // Fetch todos from backend
+  
   const fetchTodos = async () => {
     try {
       const res = await axios.get(`${API}/todos`);
@@ -28,7 +28,7 @@ function App() {
     fetchTodos();
   }, []);
 
-  // Add todo
+  
   const addTodo = async () => {
     if (!newTodo.trim()) return alert("Todo cannot be empty");
 
@@ -41,10 +41,10 @@ function App() {
     }
   };
 
-  // ✅ Delete todo function (backend parameter /todos/:todoitem)
+  
   const deleteTodo = async (todo) => {
     try {
-      // Encode todo to handle spaces and special characters
+      
       await axios.delete(`${API}/todos/${encodeURIComponent(todo)}`);
       fetchTodos();
     } catch (err) {
@@ -53,13 +53,13 @@ function App() {
     }
   };
 
-  // Start edit
+ 
   const startEdit = (todo) => {
     setEditTodo(todo);
     setEditValue(todo);
   };
 
-  // Update todo
+  
   const updateTodo = async () => {
     if (!editValue.trim()) return alert("Value cannot be empty");
 
@@ -80,7 +80,7 @@ function App() {
     <div style={{ width: "420px", margin: "40px auto", fontFamily: "Arial" }}>
       <h2>Todo App</h2>
 
-      {/* Add Todo */}
+      
       <input
         placeholder="Enter todo"
         value={newTodo}
@@ -90,7 +90,7 @@ function App() {
 
       <hr />
 
-      {/* Todo List */}
+     
       {todos.map((todo, index) => (
         <div
           key={index}
@@ -113,7 +113,7 @@ function App() {
             <>
               <span>{todo}</span>
               <span>
-                {/* EDIT ICON */}
+              
                 <img
                   src={editIcon}
                   alt="edit"
@@ -122,7 +122,7 @@ function App() {
                   onClick={() => startEdit(todo)}
                 />
 
-                {/* DELETE ICON */}
+               
                 <img
                   src={deleteIcon}
                   alt="delete"
