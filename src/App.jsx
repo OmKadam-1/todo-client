@@ -41,10 +41,10 @@ function App() {
     }
   };
 
-  // ✅ Delete todo function
+  // ✅ Delete todo function (backend parameter /todos/:todoitem)
   const deleteTodo = async (todo) => {
     try {
-      // Encode todo to handle spaces/special characters
+      // Encode todo to handle spaces and special characters
       await axios.delete(`${API}/todos/${encodeURIComponent(todo)}`);
       fetchTodos();
     } catch (err) {
