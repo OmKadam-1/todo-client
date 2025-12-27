@@ -1,12 +1,13 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// ✅ Import images from assets
+// Import icons from assets
 import editIcon from "./assets/edit.png";
 import deleteIcon from "./assets/delete.png";
 
-// ✅ API from environment variable or fallback to localhost
-const API = process.env.REACT_APP_API || "http://localhost:8030";
+// API URL (live Render backend)
+const API = process.env.REACT_APP_API || "https://todoserver-pojm.onrender.com";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -28,7 +29,7 @@ function App() {
     fetchTodos();
   }, []);
 
-  // Add new todo
+  // Add todo
   const addTodo = async () => {
     if (!newTodo.trim()) return alert("Todo cannot be empty");
 
@@ -41,13 +42,15 @@ function App() {
     }
   };
 
-  // Delete todo
+  // ✅ Delete todo
   const deleteTodo = async (todo) => {
     try {
+      // Encode special characters like spaces
       await axios.delete(`${API}/todos/${encodeURIComponent(todo)}`);
       fetchTodos();
     } catch (err) {
       console.error("Delete todo failed:", err);
+      alert("Failed to delete todo");
     }
   };
 
