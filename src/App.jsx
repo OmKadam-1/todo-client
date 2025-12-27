@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -42,10 +41,10 @@ function App() {
     }
   };
 
-  // ✅ Delete todo
+  // ✅ Delete todo function
   const deleteTodo = async (todo) => {
     try {
-      // Encode special characters like spaces
+      // Encode todo to handle spaces/special characters
       await axios.delete(`${API}/todos/${encodeURIComponent(todo)}`);
       fetchTodos();
     } catch (err) {
