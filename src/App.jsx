@@ -17,9 +17,9 @@ function App() {
     // Function to fetch all todos
     const todo = async () => {
         try {
-            console.log(`Loading todos from:, ${BASE_URL}`);
+            console.log("Loading todos from:", BASE_URL);
             // Assuming the base URL is the correct endpoint for a GET request
-            const response = await axios.get(`${BASE_URL}`); 
+            const response = await axios.get(BASE_URL); 
             setTodos(response.data.data || []); // Added fallback to empty array
         } catch (error) {
             console.error("Error fetching todos:", error);
@@ -30,7 +30,7 @@ function App() {
     const add = async () => {
         try {
             // Corrected syntax: removed trailing comma in URL and data
-            await axios.post(`${BASE_URL}, { todoitem: newtodo }`); 
+            await axios.post(BASE_URL, { todoitem: newtodo }); 
             setnewtodo("");
             todo(); // Refresh the list
         } catch (error) {
@@ -42,10 +42,10 @@ function App() {
     const edit = async() => {
         try {
             // Corrected syntax and structure. Assuming backend handles update at BASE_URL
-            await axios.put(`${BASE_URL}, {
+            await axios.put(BASE_URL, {
                 "oldtodoitem": oldtodo,
                 "newtodoitem": newtodo,
-            }`);
+            });
             todo(); // Refresh the list
             seteditmode(false);
             setnewtodo("");
@@ -59,7 +59,7 @@ function App() {
     const undo = async (todoitem) => {
         try {
             // Corrected syntax: data key inside config object, no trailing commas
-            await axios.delete(`${BASE_URL}, { data: { todoitem: todoitem } }`); 
+            await axios.delete(BASE_URL, { data: { todoitem: todoitem } }); 
             todo(); // Refresh the list
         } catch (error) {
             console.error("Error deleting todo:", error);
