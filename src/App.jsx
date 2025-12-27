@@ -1,108 +1,135 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import axios from "axios"; // Removed Axios from import as it wasn't used
-import deleteicon from "./assets/delete.png";
-import editicon from "./assets/edit.png";
+import axios from "axios";
+
+// ✅ IMPORT IMAGES FROM ASSETS
+import editIcon from "./assets/edit.png";
+import deleteIcon from "./assets/delete.png";
+
+// ✅ LIVE BACKEND URL
+const API = "https://todoserver-pojm.onrender.com";
 
 function App() {
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState("");
+  const [editTodo, setEditTodo] = useState(null);
+  const [editValue, setEditValue] = useState("");
 
-    const [todos, setTodos] = useState([]);
-    const [oldtodo, setoldtodo] = useState("");
-    const [editmode, seteditmode] = useState(false); // Changed default string "false" to boolean false
-    const [newtodo, setnewtodo] = useState("");
+  // Fetch todos
+  const fetchTodos = async () => {
+    const res = await axios.get(`${API}/todos`);
+    setTodos(res.data.data);
+  };
 
-    // Ensure environment variable VITE_BASE_URL is defined correctly in your .env file
-    const BASE_URL = import.meta.env.VITE_BASE_URL; 
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
-    // Function to fetch all todos
-    const todo = async () => {
-        try {
-            console.log(`Loading todos from:, ${BASE_URL}`);
-            // Assuming the base URL is the correct endpoint for a GET request
-            const response = await axios.get(`${BASE_URL}`); 
-            setTodos(response.data.data || []); // Added fallback to empty array
-        } catch (error) {
-            console.error("Error fetching todos:", error);
-        }
-    };
-
-    // Function to add a new todo
-    const add = async () => {
-        try {
-            // Corrected syntax: removed trailing comma in URL and data
-            await axios.post(`${BASE_URL}, { todoitem: newtodo }`); 
-            setnewtodo("");
-            todo(); // Refresh the list
-        } catch (error) {
-            console.error("Error adding todo:", error);
-        }
+  // Add todo
+  const addTodo = async () => {
+    if (!newTodo.trim()) {
+      alert("Todo cannot be empty");
+      return;
     }
 
-    // Function to edit an existing todo
-    const edit = async() => {
-        try {
-            // Corrected syntax and structure. Assuming backend handles update at BASE_URL
-            await axios.put(`${BASE_URL}, {
-                "oldtodoitem": oldtodo,
-                "newtodoitem": newtodo,
-            }`);
-            todo(); // Refresh the list
-            seteditmode(false);
-            setnewtodo("");
-            setoldtodo("");
-        } catch (error) {
-            console.error("Error editing todo:", error);
-        }
+    await axios.post(`${API}/todos`, {
+      todoitem: newTodo,
+    });
+
+    setNewTodo("");
+    fetchTodos();
+  };
+
+  // Delete todo
+  const deleteTodo = async (todo) => {
+    await axios.delete(`${API}/todos/${todo}`);
+    fetchTodos();
+  };
+
+  // Start edit
+  const startEdit = (todo) => {
+    setEditTodo(todo);
+    setEditValue(todo);
+  };
+
+  // Update todo
+  const updateTodo = async () => {
+    if (!editValue.trim()) {
+      alert("Value cannot be empty");
+      return;
     }
 
-    // Function to delete a todo
-    const undo = async (todoitem) => {
-        try {
-            // Corrected syntax: data key inside config object, no trailing commas
-            await axios.delete(`${BASE_URL}, { data: { todoitem: todoitem } }`); 
-            todo(); // Refresh the list
-        } catch (error) {
-            console.error("Error deleting todo:", error);
-        }
-    }
+    await axios.put(`${API}/todos`, {
+      oldtodoitem: editTodo,
+      newtodoitem: editValue,
+    });
 
-    // Fetch todos on component mount
-    useEffect(() => {
-        todo();
-    }, []);
+    setEditTodo(null);
+    setEditValue("");
+    fetchTodos();
+  };
 
-    return (
-        <div>
-            <h1 className="title">To do list</h1>
-            {todos.map((todo, index) => {
-                return (
-                    <div key={index} className="todo-container">
-                        <h2>{todo}</h2>
-                        <img src={editicon} className="edit-img" onClick={() => {
-                            seteditmode(true); setoldtodo(todo); setnewtodo(todo);
-                        }} alt="Edit"></img> 
-                        <img src={deleteicon} className="delete-icon" onClick={() => {
-                            undo(todo);
-                        }} alt="Delete"></img>
-                    </div>
-                );
-            })}
-            <div className="container">
-                <input type="text" placeholder="add task" className="input-task" value={newtodo} onChange={(e) => {
-                    setnewtodo(e.target.value);
-                }}></input>
-                <button className="btn-add" onClick={() => {
-                    if (editmode) {
-                        edit();
-                    } else {
-                        add();
-                    }
-                }}>
-                    {editmode ? "Update Todo" : "Add Todo"}
-                </button>
-            </div>
+  return (
+    <div style={{ width: "420px", margin: "40px auto", fontFamily: "Arial" }}>
+      <h2>Todo App</h2>
+
+      {/* Add Todo */}
+      <input
+        placeholder="Enter todo"
+        value={newTodo}
+        onChange={(e) => setNewTodo(e.target.value)}
+      />
+      <button onClick={addTodo}>Add</button>
+
+      <hr />
+
+      {/* Todo List */}
+      {todos.map((todo, index) => (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "10px",
+            alignItems: "center",
+          }}
+        >
+          {editTodo === todo ? (
+            <>
+              <input
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+              />
+              <button onClick={updateTodo}>Save</button>
+            </>
+          ) : (
+            <>
+              <span>{todo}</span>
+
+              <span>
+                {/* ✏️ EDIT ICON */}
+                <img
+                  src={editIcon}
+                  alt="edit"
+                  width="18"
+                  style={{ cursor: "pointer", marginRight: "10px" }}
+                  onClick={() => startEdit(todo)}
+                />
+
+                {/* 🗑️ DELETE ICON */}
+                <img
+                  src={deleteIcon}
+                  alt="delete"
+                  width="18"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => deleteTodo(todo)}
+                />
+              </span>
+            </>
+          )}
         </div>
-    );
+      ))}
+    </div>
+  );
 }
 
 export default App;
