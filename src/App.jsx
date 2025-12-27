@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// ✅ IMPORT IMAGES FROM ASSETS
+// ✅ Import images from assets
 import editIcon from "./assets/edit.png";
 import deleteIcon from "./assets/delete.png";
 
-// ✅ LIVE BACKEND URL
-const API = "https://todoserver-pojm.onrender.com";
+// ✅ API from environment variable or fallback to localhost
+const API = process.env.REACT_APP_API || "http://localhost:8030";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -14,35 +14,41 @@ function App() {
   const [editTodo, setEditTodo] = useState(null);
   const [editValue, setEditValue] = useState("");
 
-  // Fetch todos
+  // Fetch todos from backend
   const fetchTodos = async () => {
-    const res = await axios.get(`${API}/todos`);
-    setTodos(res.data.data);
+    try {
+      const res = await axios.get(`${API}/todos`);
+      setTodos(res.data.data);
+    } catch (err) {
+      console.error("Failed to fetch todos:", err);
+    }
   };
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  // Add todo
+  // Add new todo
   const addTodo = async () => {
-    if (!newTodo.trim()) {
-      alert("Todo cannot be empty");
-      return;
+    if (!newTodo.trim()) return alert("Todo cannot be empty");
+
+    try {
+      await axios.post(`${API}/todos`, { todoitem: newTodo });
+      setNewTodo("");
+      fetchTodos();
+    } catch (err) {
+      console.error("Add todo failed:", err);
     }
-
-    await axios.post(`${API}/todos`, {
-      todoitem: newTodo,
-    });
-
-    setNewTodo("");
-    fetchTodos();
   };
 
   // Delete todo
   const deleteTodo = async (todo) => {
-    await axios.delete(`${API}/todos/${todo}`);
-    fetchTodos();
+    try {
+      await axios.delete(`${API}/todos/${encodeURIComponent(todo)}`);
+      fetchTodos();
+    } catch (err) {
+      console.error("Delete todo failed:", err);
+    }
   };
 
   // Start edit
@@ -53,19 +59,19 @@ function App() {
 
   // Update todo
   const updateTodo = async () => {
-    if (!editValue.trim()) {
-      alert("Value cannot be empty");
-      return;
+    if (!editValue.trim()) return alert("Value cannot be empty");
+
+    try {
+      await axios.put(`${API}/todos`, {
+        oldtodoitem: editTodo,
+        newtodoitem: editValue,
+      });
+      setEditTodo(null);
+      setEditValue("");
+      fetchTodos();
+    } catch (err) {
+      console.error("Update todo failed:", err);
     }
-
-    await axios.put(`${API}/todos`, {
-      oldtodoitem: editTodo,
-      newtodoitem: editValue,
-    });
-
-    setEditTodo(null);
-    setEditValue("");
-    fetchTodos();
   };
 
   return (
@@ -104,9 +110,8 @@ function App() {
           ) : (
             <>
               <span>{todo}</span>
-
               <span>
-                {/* ✏️ EDIT ICON */}
+                {/* EDIT ICON */}
                 <img
                   src={editIcon}
                   alt="edit"
@@ -115,7 +120,7 @@ function App() {
                   onClick={() => startEdit(todo)}
                 />
 
-                {/* 🗑️ DELETE ICON */}
+                {/* DELETE ICON */}
                 <img
                   src={deleteIcon}
                   alt="delete"
