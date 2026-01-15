@@ -1,113 +1,53 @@
-/* App.css */
-
-/* Title */
-.title {
-  text-align: center;
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 30px;
-  font-weight: bold;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Todo item container */
-.todo-container {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 15px 20px;
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
+.todo-card {
+  border: 1px solid black;
+  margin: 10px 20px;
+  padding: 0 10px;
+  border-radius: 10px;
+    display: flex;
   justify-content: space-between;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s, box-shadow 0.2s;
+  align-items: center;
 }
 
-.todo-container:hover {
-  transform: translateY(-2px);
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+.todo-items-container {
+  height: 400px;
+  overflow-y: scroll;
 }
 
-.todo-container h2 {
-  font-size: 1.2rem;
-  color: #333;
-  margin: 0;
-  word-break: break-word;
-  flex: 1;
-}
-
-/* Edit and Delete icons */
-.edit-img,
-.delete-icon {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  margin-left: 10px;
-  transition: transform 0.2s, filter 0.2s;
-}
-
-.edit-img:hover {
-  transform: scale(1.1);
-}
-
-.delete-icon:hover {
-  transform: scale(1.1);
-  filter: brightness(0.8);
-}
-
-/* Input container */
-.container {
+.todo-add-container {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 10px 20px;
   display: flex;
-  margin-top: 20px;
-  gap: 10px;
+  justify-content: center;
+  background-color: #f0f0f0;
 }
 
-/* Input field */
-.input-task {
-  flex: 1;
-  padding: 12px 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.input-task:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
-/* Add/Edit button */
-.btn-add {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 1rem;
+.img-delete-todo{
+  height: 20px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
 }
 
-.btn-add:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
+.img-edit-todo{
+  height: 20px;
+  cursor: pointer;
+  margin-right: 20px;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .todo-container h2 {
-    font-size: 1rem;
-  }
 
-  .input-task {
-    font-size: 0.9rem;
-    padding: 10px;
-  }
+.input-todo {
+  font-size: 20px;
+  padding: 5px 10px;
+  margin-right: 10px;
+  width: 400px;
+}
 
-  .btn-add {
-    font-size: 0.9rem;
-    padding: 10px 15px;
-  }
+.btn-add-todo {
+  font-size: 20px;
+  padding: 5px 15px;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }

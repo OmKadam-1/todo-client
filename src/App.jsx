@@ -1,140 +1,112 @@
-import { useEffect, useState } from "react";
+import "./App.css";
 import axios from "axios";
-
-
-import editIcon from "./assets/edit.png";
-import deleteIcon from "./assets/delete.png";
-
-
-const API = process.env.REACT_APP_API || "https://todoserver-pojm.onrender.com";
+import { useEffect, useState } from "react";
+import imgDelete from "./assets/delete.png";
+import imgEdit from "./assets/edit.png";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [oldTodo, setOldTodo] = useState("");
+  const [editMode, setEditMode] = useState(false);
   const [newTodo, setNewTodo] = useState("");
-  const [editTodo, setEditTodo] = useState(null);
-  const [editValue, setEditValue] = useState("");
 
-  
-  const fetchTodos = async () => {
+const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8008";
+
+
+  const loadTodos = async () => {
     try {
-      const res = await axios.get(`${API}/todos`);
-      setTodos(res.data.data);
-    } catch (err) {
-      console.error("Failed to fetch todos:", err);
+      const response = await axios.get(`${BASE_URL}/todos`);
+      setTodos(Array.isArray(response.data.data) ? response.data.data : []);
+    } catch (error) {
+      console.error(error);
+      setTodos([]);
     }
+  };
+
+  const addTodo = async () => {
+    if (!newTodo.trim()) return;
+
+    await axios.post(`${BASE_URL}/todos`, {
+      todoItem: newTodo, // ✅ backend expects this
+    });
+
+    setNewTodo("");
+    loadTodos();
+  };
+
+  const editTodo = async () => {
+    if (!newTodo.trim()) return;
+
+    await axios.put(`${BASE_URL}/todos`, {
+      oldTodoItem: oldTodo, // ✅ backend expects this
+      newTodoItem: newTodo, // ✅ backend expects this
+    });
+
+    setEditMode(false);
+    setNewTodo("");
+    setOldTodo("");
+    loadTodos();
+  };
+
+  const deleteTodo = async (todoItem) => {
+    await axios.delete(`${BASE_URL}/todos`, {
+      data: { todoItem }, // ✅ backend expects body
+    });
+
+    loadTodos();
   };
 
   useEffect(() => {
-    fetchTodos();
+    loadTodos();
   }, []);
 
-  
-  const addTodo = async () => {
-    if (!newTodo.trim()) return alert("Todo cannot be empty");
-
-    try {
-      await axios.post(`${API}/todos`, { todoitem: newTodo });
-      setNewTodo("");
-      fetchTodos();
-    } catch (err) {
-      console.error("Add todo failed:", err);
-    }
-  };
-
-  
-  const deleteTodo = async (todo) => {
-    try {
-      
-      await axios.delete(`${API}/todos/${encodeURIComponent(todo)}`);
-      fetchTodos();
-    } catch (err) {
-      console.error("Delete todo failed:", err);
-      alert("Failed to delete todo");
-    }
-  };
-
- 
-  const startEdit = (todo) => {
-    setEditTodo(todo);
-    setEditValue(todo);
-  };
-
-  
-  const updateTodo = async () => {
-    if (!editValue.trim()) return alert("Value cannot be empty");
-
-    try {
-      await axios.put(`${API}/todos`, {
-        oldtodoitem: editTodo,
-        newtodoitem: editValue,
-      });
-      setEditTodo(null);
-      setEditValue("");
-      fetchTodos();
-    } catch (err) {
-      console.error("Update todo failed:", err);
-    }
-  };
-
   return (
-    <div style={{ width: "420px", margin: "40px auto", fontFamily: "Arial" }}>
-      <h2>Todo App</h2>
+    <div>
+      <h1>Todo List</h1>
+      <p>{editMode ? "Edit Todo" : "Add Todo"}</p>
 
-      
-      <input
-        placeholder="Enter todo"
-        value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
-      />
-      <button onClick={addTodo}>Add</button>
+      <div className="todo-items-container">
+        {todos?.map((todo, index) => (
+          <div key={index} className="todo-card">
+            <p>{todo}</p>
+            <div>
+              <img
+                src={imgEdit}
+                className="img-edit-todo"
+                onClick={() => {
+                  setEditMode(true);
+                  setOldTodo(todo);
+                  setNewTodo(todo);
+                }}
+              />
+              <img
+                src={imgDelete}
+                className="img-delete-todo"
+                onClick={() => deleteTodo(todo)}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
 
-      <hr />
+      <div className="todo-add-container">
+        <input
+          type="text"
+          placeholder="New Todo"
+          className="input-todo"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+        />
 
-     
-      {todos.map((todo, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "10px",
-            alignItems: "center",
+        <button
+          className="btn-add-todo"
+          onClick={() => {
+            editMode ? editTodo() : addTodo();
           }}
         >
-          {editTodo === todo ? (
-            <>
-              <input
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-              />
-              <button onClick={updateTodo}>Save</button>
-            </>
-          ) : (
-            <>
-              <span>{todo}</span>
-              <span>
-              
-                <img
-                  src={editIcon}
-                  alt="edit"
-                  width="18"
-                  style={{ cursor: "pointer", marginRight: "10px" }}
-                  onClick={() => startEdit(todo)}
-                />
-
-               
-                <img
-                  src={deleteIcon}
-                  alt="delete"
-                  width="18"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => deleteTodo(todo)}
-                />
-              </span>
-            </>
-          )}
-        </div>
-      ))}
+          {editMode ? "Edit Todo" : "Add Todo"}
+        </button>
+      </div>
     </div>
   );
 }
