@@ -27,7 +27,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8008";
     if (!newTodo.trim()) return;
 
     await axios.post(`${BASE_URL}/todos`, {
-      todoItem: newTodo, // ✅ backend expects this
+      todoItem: newTodo, 
     });
 
     setNewTodo("");
@@ -38,8 +38,8 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8008";
     if (!newTodo.trim()) return;
 
     await axios.put(`${BASE_URL}/todos`, {
-      oldTodoItem: oldTodo, // ✅ backend expects this
-      newTodoItem: newTodo, // ✅ backend expects this
+      oldTodoItem: oldTodo, 
+      newTodoItem: newTodo, 
     });
 
     setEditMode(false);
@@ -50,7 +50,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8008";
 
   const deleteTodo = async (todoItem) => {
     await axios.delete(`${BASE_URL}/todos`, {
-      data: { todoItem }, // ✅ backend expects body
+      data: { todoItem }, 
     });
 
     loadTodos();
